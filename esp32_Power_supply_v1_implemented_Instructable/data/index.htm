@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html style="background-color: black; font-family: Seven Segment;">
+
+<head>
+	<title>Page Title</title>
+</head>
+<body>
+
+<script src="picograph.js"></script>
+<script>
+	var byID = function(id) { return document.getElementById(id); };
+	var PG1_yrand0;
+	var PG2_yrand0;
+	var PG3_yrand0;
+	var PG4_yrand0;
+	var PG5_yrand0;
+	var PG6_yrand0;
+	
+	function SndUpdate() {
+	
+		/*cap the Vset to Vmax*/
+		/*if (parseInt(byID("PS1_Vset").value) > parseInt(byID("PS1_Vmax").value)) {byID("PS1_Vset").value = byID("PS1_Vmax").value}
+		if (parseInt(byID("PS2_Vset").value) > parseInt(byID("PS2_Vmax").value)) {byID("PS2_Vset").value = byID("PS2_Vmax").value}*/
+		/*if (parseInt(byID("PS3_Vset").value) > parseInt(byID("PS3_Vmax").value)) {byID("PS3_Vset").value = byID("PS3_Vmax").value}*/
+
+		var xh = new XMLHttpRequest();
+		xh.onreadystatechange = function(){
+			if (xh.readyState == 4){
+			if (xh.status == 200) {
+				var Msg = JSON.parse(xh.responseText);
+				PG1_yrand0=Msg.PG1_yrand0;
+				PG2_yrand0=Msg.PG2_yrand0;
+				PG3_yrand0=Msg.PG3_yrand0;
+				PG4_yrand0=Msg.PG4_yrand0;
+				PG5_yrand0=Msg.PG5_yrand0;
+				PG6_yrand0=Msg.PG6_yrand0;
+				/*
+				heap.add(res.heap);
+				temp.add(res.analog);
+				digi.add(res.gpio);*/
+			}
+			}
+		};
+		var message = "/SndUpdate?";
+		message += "PS1_Vset="+byID("PS1_Vset").value;
+		message += "&PS1_Imax="+byID("PS1_Imax").value;
+		message += "&PS1_Wmax="+byID("PS1_Wmax").value;
+		message += "&PS1_VAmpl="+byID("PS1_VAmpl").value;
+		message += "&PS1_IAmpl="+byID("PS1_IAmpl").value;
+		message += "&PS2_Vset="+byID("PS2_Vset").value;
+		message += "&PS2_Imax="+byID("PS2_Imax").value;
+		message += "&PS2_Wmax="+byID("PS2_Wmax").value;
+		message += "&PS2_VAmpl="+byID("PS2_VAmpl").value;
+		message += "&PS2_IAmpl="+byID("PS2_IAmpl").value;
+		message += "&PS3_Vset=0";
+		message += "&PS3_Imax="+byID("PS3_Imax").value;
+		message += "&PS3_Wmax=0";
+		message += "&PS3_VAmpl=0";
+		message += "&PS3_IAmpl="+byID("PS3_IAmpl").value;
+		message += "&operVoltage="+byID("operVoltage").value;
+		message += "&PS1_Ioff="+byID("PS1_Ioff").value;
+		message += "&PS2_Ioff="+byID("PS2_Ioff").value;
+		message += "&PS3_Ioff="+byID("PS3_Ioff").value;		
+		xh.open("GET", message, true);
+		xh.send(null);		
+	 
+	 }
+	
+</script>
+<style>
+.flex-container {
+  display: flex;
+  background-color: cadetblue;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 20px;
+  font-family: "Seven Segment";
+  font-weight: bold;
+
+}
+input {
+	width: 60px;
+	font-family: "Seven Segment";
+	font-size: 20px;
+	color: cadetblue;
+	font-weight: bold;
+	border-style: none;
+}
+</style>
+
+<h1 style="color: cadetblue">POWER BOARD</h1>
+<!--p>This is a paragraph.</p-->
+<h1 style="color: cadetblue">VOLT & CURRENT MONITOR</h1>
+<div class="container">
+    <div class="flex-container">
+		<div id="PG1_rect">
+			<label for="PG1_scale">Scale:</label>
+			<input type="number" id="PG1_scale" name="PG1_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+			<canvas id="PG1_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+			</canvas>
+
+			<!-- div for legends/labels -->			
+			<div id="PG1_graphLabels">
+			</div>
+			<div id="PG1_wattLabel">
+			</div>
+		  </div>
+		<div id="PG2_rect">
+			<label for="PG2_scale">Scale:</label>
+			<input type="number" id="PG2_scale" name="PG2_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+			<canvas id="PG2_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+			</canvas>
+
+			<!-- div for legends/labels -->
+			<div id="PG2_graphLabels">
+			</div>
+		  
+		  </div>
+		<div id="PG3_rect">
+			<label for="PG3_scale">Scale:</label>
+			<input type="number" id="PG3_scale" name="PG3_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+			<canvas id="PG3_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+			</canvas>
+
+			<!-- div for legends/labels -->
+			<div id="PG3_graphLabels">
+			</div>
+			<div id="PG3_wattLabel">
+			</div>		  
+		  </div>
+		<div id="PG4_rect">
+			<label for="PG4_scale">Scale:</label>
+			<input type="number" id="PG4_scale" name="PG4_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+			<canvas id="PG4_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+			</canvas>
+
+			<!-- div for legends/labels -->
+			<div id="PG4_graphLabels">
+			</div>
+		  
+		  </div>
+<!--		<div id="PG5_rect">
+<!--		<label for="PG5_scale">Scale:</label>
+<!--		<input type="number" id="PG5_scale" name="PG5_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+<!--		<canvas id="PG5_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+<!--		</canvas>
+
+			<!-- div for legends/labels -->
+<!--		<div id="PG5_graphLabels">
+<!--		</div>
+<!--		<div id="PG5_wattLabel">
+<!--		</div>		  
+<!--	</div>-->
+		<div id="PG6_rect">
+			<label for="PG6_scale">Scale:</label>
+			<input type="number" id="PG6_scale" name="PG6_scale" value="10"><br><br>
+			<!-- Canvas for thr graph -->
+			<canvas id="PG6_graphDemo" style="height:100px; border:2px solid #000000;background-color: #fafafa;" >
+			</canvas>
+
+			<!-- div for legends/labels -->
+			<div id="PG6_graphLabels">
+			</div>
+		  
+		</div>
+	
+	</div>    
+
+        <script>
+            /* Create graph using picograph */
+            var PG1_demograph = createGraph("PG1_graphDemo",["Ch1"],"V", "PG1_graphLabels", 20, 11, false, false,11,"#e52b50");
+			var PG2_demograph = createGraph("PG2_graphDemo",["Ch1"],"mA", "PG2_graphLabels", 20, 11, false, false,11,"#e52b50");
+			var PG3_demograph = createGraph("PG3_graphDemo",["Ch2"],"V", "PG3_graphLabels", 20, 11, false, false,11, "#008000");
+			var PG4_demograph = createGraph("PG4_graphDemo",["Ch2"],"mA", "PG4_graphLabels", 20, 11, false, false,11, "#008000");
+//			var PG5_demograph = createGraph("PG5_graphDemo",["Ch3"],"V", "PG5_graphLabels", 20, 11, false, false,11, "#0000ff");
+			var PG6_demograph = createGraph("PG6_graphDemo",["Ch3"],"mA", "PG6_graphLabels", 20, 11, false, false,11, "#0000ff");
+			
+
+            /* Update values every second */
+            setInterval(updateEverySecond, 1000);
+
+            function updateEverySecond() {
+                /* Get new values */
+
+				SndUpdate();
+
+                /* Update graph */
+				
+                PG1_demograph.update([PG1_yrand0],parseInt(byID("PG1_scale").value)+
+				parseInt(byID("PG1_scale").value)/10,"#e52b50");
+				PG2_demograph.update([PG2_yrand0],parseInt(byID("PG2_scale").value)+
+				parseInt(byID("PG2_scale").value)/10,"#e52b50");
+				PG3_demograph.update([PG3_yrand0],parseInt(byID("PG3_scale").value)+
+				parseInt(byID("PG3_scale").value)/10, "#008000");
+				PG4_demograph.update([PG4_yrand0],parseInt(byID("PG4_scale").value)+
+				parseInt(byID("PG4_scale").value)/10, "#008000");
+//				PG5_demograph.update([PG5_yrand0],parseInt(byID("PG5_scale").value)+
+//				parseInt(byID("PG5_scale").value)/10, "#0000ff");
+				PG6_demograph.update([PG6_yrand0],parseInt(byID("PG6_scale").value)+
+				parseInt(byID("PG6_scale").value)/10, "#0000ff");
+				var Watts = Math.round(PG1_yrand0 * PG2_yrand0 *100)/100;
+				byID("PG1_wattLabel").innerHTML = `<div><p></p> WATT: <span style="color: cadetblue"> ${Watts} </span> mW </div>`;
+				var Watts = Math.round(PG3_yrand0 * PG4_yrand0 *100)/100;
+				byID("PG3_wattLabel").innerHTML = `<div><p></p>WATT:  <span style="color: cadetblue"> ${Watts} mW</div>`;
+//				var Watts = Math.round(PG5_yrand0 * PG6_yrand0 *100)/100;
+//				byID("PG5_wattLabel").innerHTML = `<div><p></p>WATT:  <span style="color: cadetblue"> ${Watts} mW</div>`;
+				
+				byID("PG1_scale").value = Math.floor(parseInt(byID("PG1_scale").value)/2+PG1_yrand0);
+				byID("PG2_scale").value = Math.floor(parseInt(byID("PG2_scale").value)/2+PG2_yrand0);
+				byID("PG3_scale").value = Math.floor(parseInt(byID("PG3_scale").value)/2+PG3_yrand0);
+				byID("PG4_scale").value = Math.floor(parseInt(byID("PG4_scale").value)/2+PG4_yrand0);
+//				byID("PG5_scale").value = Math.floor(parseInt(byID("PG5_scale").value)/2+PG5_yrand0);
+				byID("PG6_scale").value = Math.floor(parseInt(byID("PG6_scale").value)/2+PG6_yrand0);
+				
+            }
+        </script>
+	</div>
+
+<h1 style="color: cadetblue"> POWER SUPPLY </h1>	
+<div class="flex-container1">
+	<script>
+	 function ChgVoltage(no) {
+		if (byID("PS"+no+"_Imax").value*byID("PS"+no+"_Vset").value>byID("PS"+no+"_Wmax").value) {
+			byID("PS"+no+"_Vset").value = Math.floor(byID("PS"+no+"_Wmax").value/byID("PS"+no+"_Imax").value);
+		}
+//		if (byID("PS"+no+"_Vset").value<2) { byID("PS"+no+"_Vset").value=2}
+	 }
+	 function ChgCurrent(no) {
+		if (byID("PS"+no+"_Imax").value*byID("PS"+no+"_Vset").value>byID("PS"+no+"_Wmax").value) {
+			byID("PS"+no+"_Imax").value = Math.floor(byID("PS"+no+"_Wmax").value/byID("PS"+no+"_Vset").value);
+		}
+	 }
+	 function ChgWatt(no) {
+	 	if (byID("PS"+no+"_Imax").value*byID("PS"+no+"_Vset").value>byID("PS"+no+"_Wmax").value) {
+			byID("PS"+no+"_Imax").value = Math.floor(byID("PS"+no+"_Wmax").value/byID("PS"+no+"_Vset").value);
+		}
+	 }
+	</script>
+	<style>
+	.flex-container1 {
+	  display: flex;
+	  background-color: cadetblue;
+	  flex-wrap: wrap;
+	}
+
+	.flex-container1 > div {
+	  background-color: #f1f1f1;
+	  margin: 10px;
+	  padding: 20px;
+	  font-size: 20px;
+	  font-family: "Arial";
+	  font-weight: bold;
+
+	}
+
+	</style>
+
+	<div>
+		<label for="PS1_Vset" style="width: 70px; display: inline-block;">Vset: </label>
+		<input type="number" id="PS1_Vset" name="PS1_Vset"  value="3.3" min="2.25" max="12" step="1" oninput="ChgVoltage(1)" onchange="SndUpdate"> V<br>
+		<label for="PS1_Imax" style="width: 70px; display: inline-block;">Imax:</label>
+		<input type="number" id="PS1_Imax" name="PS1_Imax" value="25" max="1000" min="0" step="5" oninput="ChgCurrent(1)" onchange="SndUpdate"> mA<br>
+		<label for="PS1_Wmax" style="width: 70px; display: inline-block;">Wmax:  </label>
+		<input type="number" id="PS1_Wmax" name="PS1_Wmax" value="250" max="500" min="0" oninput="ChgWatt(1)" onchange="SndUpdate"> mW<br>
+	</div>
+	<div>
+		<label for="PS2_Vset" style="width: 70px; display: inline-block;">Vset: </label>
+		<input type="number" id="PS2_Vset" name="PS1_Vset" value="3.3" min="2.25" max="12" oninput="ChgVoltage(2)" onchange="SndUpdate"> V<br>
+		<label for="PS2_Imax" style="width: 70px; display: inline-block;">Imax:</label>
+		<input type="number" id="PS2_Imax" name="PS1_Imax" value="25" max="1000" min="0" oninput="ChgCurrent(2)" onchange="SndUpdate"> mA<br>
+		<label for="PS2_Wmax" style="width: 70px; display: inline-block;">Wmax:  </label>
+		<input type="number" id="PS2_Wmax" name="PS1_Wmax" value="250" max="500" min="0" oninput="ChgWatt(2)" onchange="SndUpdate"> mW<br>
+	</div>
+	<div>
+		<label for="PS3_Imax" style="width: 70px; display: inline-block;">Imax:</label>
+		<input type="number" id="PS3_Imax" name="PS3_Imax" value="25" max="1000" min="0" oninput="ChgCurrent(3)" onchange="SndUpdate"> mA<br>
+	</div>
+</div>
+
+
+<h1 style="color: cadetblue"> CALIBRATION PARAMETERS </h1>	
+<div class="flex-container2">
+	<style>
+	.flex-container2 {
+	  display: flex;
+	  background-color: cadetblue;
+	  flex-wrap: wrap;
+	}
+
+	.flex-container2 > div {
+	  background-color: #f1f1f1;
+	  margin: 10px;
+	  padding: 20px;
+	  font-size: 20px;
+	  font-family: "Arial";
+	  font-weight: bold;
+
+	}
+
+	</style>
+
+	<div>
+		<label for="operVoltage" style="width: 200px; display: inline-block;">ESP32 Voltage: </label>
+		<input type="number" id="operVoltage" name="operVoltage"  value="3.300" min="2.7" max ="3.6" step="0.01" oninput="xxxxxxxx" onchange="yyyyyyyyy"> V<br>			
+	</div>
+</div>
+<div class="flex-container3">
+	<script>
+	 function ChgIAmpl(no) {
+		if (no=="1") {byID("PS"+no+"_RAmpl").value = byID("PS"+no+"_IAmpl").value*5110/(12.0588)};
+		if (no=="2") {byID("PS"+no+"_RAmpl").value = byID("PS"+no+"_IAmpl").value*4880/(12.0588)};
+		if (no=="3") {byID("PS"+no+"_RAmpl").value = byID("PS"+no+"_IAmpl").value*5050/(15)};
+	 }
+	 function ChgRAmpl(no) {
+	 
+		if (no=="1") {byID("PS"+no+"_IAmpl").value = byID("PS"+no+"_RAmpl").value*(12.0588)/5110};
+		if (no=="2") {byID("PS"+no+"_IAmpl").value = byID("PS"+no+"_RAmpl").value*(12.0588)/4880}
+		if (no=="3") {byID("PS"+no+"_IAmpl").value = byID("PS"+no+"_RAmpl").value*(15)/5050}
+	 }
+	</script>
+	<style>
+	.flex-container3 {
+	  display: flex;
+	  background-color: cadetblue;
+	  flex-wrap: wrap;
+	}
+
+	.flex-container3 > div {
+	  background-color: #f1f1f1;
+	  margin: 10px;
+	  padding: 20px;
+	  font-size: 20px;
+	  font-family: "Arial";
+	  font-weight: bold;
+
+	}
+
+	</style>
+
+	<div>
+		<label for="PS1_IAmpl" style="width: 70px; display: inline-block;">IAmpl: </label>
+		<input type="number" id="PS1_IAmpl" name="PS1_Iampl"  value="21" min="0" oninput="ChgIAmpl(1)" onchange="SndUpdate"> x<br>
+		<label for="PS1_RAmpl" style="width: 70px; display: inline-block;">RAmpl: </label>
+		<input type="number" id="PS1_RAmpl" name="PS1_Rampl"  value="5110" min="0" oninput="ChgRAmpl(1)" onchange="SndUpdate"> Ohm<br>
+		<label for="PS1_VAmpl" style="width: 70px; display: inline-block;">VAmpl: </label>
+		<input type="number" id="PS1_VAmpl" name="PS1_Vampl"  value="3.8" min="0" oninput="ChgVAmpl(1)" onchange="SndUpdate"> x<br>
+		<label for="PS1_Ioff" style="width: 70px; display: inline-block;">Ioff:  </label>
+		<input type="number" id="PS1_Ioff" name="PS1_Ioff" value="-5" max="500" min="-500"> mV<br>
+	</div>
+	<div>
+		<label for="PS2_IAmpl" style="width: 70px; display: inline-block;">IAmpl: </label>
+		<input type="number" id="PS2_IAmpl" name="PS2_Iampl"  value="12.20" min="0" oninput="ChgIAmpl(2)" onchange="SndUpdate"> x<br>
+		<label for="PS2_RAmpl" style="width: 70px; display: inline-block;">RAmpl: </label>
+		<input type="number" id="PS2_RAmpl" name="PS2_Rampl"  value="5000" min="0" oninput="ChgRAmpl(2)" onchange="SndUpdate"> Ohm<br>
+		<label for="PS2_VAmpl" style="width: 70px; display: inline-block;">VAmpl: </label>
+		<input type="number" id="PS2_VAmpl" name="PS2_Vampl"  value="3.60" min="0" oninput="ChgVAmpl(2)" onchange="SndUpdate"> x<br>
+		<label for="PS2_Ioff" style="width: 70px; display: inline-block;">Ioff:  </label>
+		<input type="number" id="PS2_Ioff" name="PS2_Ioff" value="0" max="500" min="-500"> mV<br>		
+	</div>
+	<div>
+		<label for="PS3_IAmpl" style="width: 70px; display: inline-block;">IAmpl: </label>
+		<input type="number" id="PS3_IAmpl" name="PS3_Iampl"  value="15" min="0" oninput="ChgIAmpl(3)" onchange="SndUpdate"> x<br>
+		<label for="PS3_RAmpl" style="width: 70px; display: inline-block;">RAmpl: </label>
+		<input type="number" id="PS3_RAmpl" name="PS3_Rampl"  value="4610" min="0" oninput="ChgRAmpl(3)" onchange="SndUpdate"> Ohm<br><br>
+		<label for="PS3_Ioff" style="width: 70px; display: inline-block;">Ioff:  </label>
+		<input type="number" id="PS3_Ioff" name="PS3_Ioff" value="123" max="500" min="-500"> mV<br>		
+	</div>
+</div>
+
+
+</body>
+</html>
