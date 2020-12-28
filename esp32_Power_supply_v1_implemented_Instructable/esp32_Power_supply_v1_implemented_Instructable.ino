@@ -80,6 +80,9 @@ Adafruit_INA260 ina260_0x44 = Adafruit_INA260();
 float Vina[3]={0.0f,0.0f,0.0f};
 float Iina[3]={0.0f,0.0f,0.0f};
 
+bool ina260_0x40_active = false;
+bool ina260_0x41_active = false;
+bool ina260_0x44_active = false;
 
 //format bytes
 String formatBytes(size_t bytes) {
@@ -399,31 +402,40 @@ void setup(void) {
   if (!ina260_0x40.begin(0x40)) {
     Serial.println(F("Couldn't find INA260 0x40 chip"));
     //while (1);
+  } else {
+      ina260_0x40_active = true;
+      ina260_0x40.setAveragingCount(INA260_COUNT_256);
+      ina260_0x40.setVoltageConversionTime(INA260_TIME_1_1_ms);
+      ina260_0x40.setCurrentConversionTime(INA260_TIME_1_1_ms);
+      ina260_0x40.setMode(INA260_MODE_CONTINUOUS);
   }
   Serial.println(F("Found INA260 chip 0x40"));
   if (!ina260_0x41.begin(0x41)) {
     Serial.println(F("Couldn't find 0x41 INA260 chip"));
     //while (1);
+  } else {
+      ina260_0x41_active = true;
+      ina260_0x41.setAveragingCount(INA260_COUNT_256);
+      ina260_0x41.setVoltageConversionTime(INA260_TIME_1_1_ms);
+      ina260_0x41.setCurrentConversionTime(INA260_TIME_1_1_ms);
+      ina260_0x41.setMode(INA260_MODE_CONTINUOUS);
   }
+
+  
   Serial.println(F("Found INA260 0x41 chip"));
   if (!ina260_0x44.begin(0x44)) {
     Serial.println(F("Couldn't find INA260 0x44 chip"));
     //while (1);
+  } else {
+    ina260_0x44_active = true;
+    ina260_0x44.setAveragingCount(INA260_COUNT_256);
+    ina260_0x44.setVoltageConversionTime(INA260_TIME_1_1_ms);
+    ina260_0x44.setCurrentConversionTime(INA260_TIME_1_1_ms);
+    ina260_0x44.setMode(INA260_MODE_CONTINUOUS);
   }
   Serial.println(F("Found INA260 chip 0x44"));
 
-  ina260_0x40.setAveragingCount(INA260_COUNT_256);
-  ina260_0x40.setVoltageConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x40.setCurrentConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x40.setMode(INA260_MODE_CONTINUOUS);
-  ina260_0x41.setAveragingCount(INA260_COUNT_256);
-  ina260_0x41.setVoltageConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x41.setCurrentConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x41.setMode(INA260_MODE_CONTINUOUS);
-  ina260_0x44.setAveragingCount(INA260_COUNT_256);
-  ina260_0x44.setVoltageConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x44.setCurrentConversionTime(INA260_TIME_1_1_ms);
-  ina260_0x44.setMode(INA260_MODE_CONTINUOUS);
+  
 }
 int prtr=0;
 void loop(void) {
@@ -461,12 +473,21 @@ void loop(void) {
     //Serial.print("channel: "); Serial.print(i); Serial.print(" - Vset: "); Serial.print(Ch[i].Vset); Serial.print(" - Imax: "); Serial.print(Ch[i].Imax); Serial.print(" - IAmpl"); Serial.println(Ch[i].IAmpl);
   }
     //while (!ina260_0x40.conversionReady() || !ina260_0x41.conversionReady() || !ina260_0x44.conversionReady());
-    Vina[0]=ina260_0x40.readBusVoltage()/1000.0f;
-    Iina[0]=ina260_0x40.readCurrent();
-    Vina[1]=ina260_0x41.readBusVoltage()/1000.0f;
-    Iina[1]=ina260_0x41.readCurrent();
-    Vina[2]=ina260_0x44.readBusVoltage()/1000.0f;
-    Iina[2]=ina260_0x44.readCurrent();
+    if (ina260_0x40_active == true) 
+    {
+      Vina[0]=ina260_0x40.readBusVoltage()/1000.0f;
+      Iina[0]=ina260_0x40.readCurrent();
+    }
+    if (ina260_0x41_active == true) 
+    {
+      Vina[1]=ina260_0x41.readBusVoltage()/1000.0f;
+      Iina[1]=ina260_0x41.readCurrent();
+    }
+    if (ina260_0x44_active == true) 
+    {
+      Vina[2]=ina260_0x44.readBusVoltage()/1000.0f;
+      Iina[2]=ina260_0x44.readCurrent();
+    }
     
     if (prtr==1){
       Serial.print(operVoltage);Serial.print(";");Serial.print(Calib.VDc);Serial.print(";");Serial.print(Calib.IDc);Serial.print(";");Serial.println(Iina[1]);
